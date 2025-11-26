@@ -3,6 +3,7 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/all";
 import { TiLocationArrow } from "react-icons/ti";
 import { useEffect, useRef, useState } from "react";
+import Loader from "./Loader";
 
 import Button from "./Button";
 import VideoPreview from "./VideoPreview";
@@ -20,6 +21,57 @@ const Hero = () => {
 
     const nextVideoRef = useRef(null);
 
+    useEffect(() => {
+    if (loadedVideos === totalVideos - 1) {
+      setIsLoading(false);
+    }
+  }, [loadedVideos]);
+
+    useGSAP(
+        () => {
+            if (hasClicked) {
+                gsap.set("#next-video", { visibility: "visible" });
+                gsap.to("#next-video", {
+                    transformOrigin: "center center",
+                    scale: 1,
+                    width: "100%",
+                    height: "100%",
+                    duration: 1,
+                    ease: "power1.inOut",
+                    onStart: () => nextVideoRef.current.play(),
+                });
+                gsap.from("#current-video", {
+                    transformOrigin: "center center",
+                    scale: 0,
+                    duration: 1.5,
+                    ease: "power1.inOut",
+                });
+            }
+        },
+        {
+            dependencies: [currentIndex],
+            revertOnUpdate: true,
+        }
+    );
+
+    useGSAP(() => {
+        gsap.set("#video-frame", {
+            clipPath: "polygon(14% 0, 72% 0, 88% 90%, 0 95%)",
+            borderRadius: "0% 0% 40% 10%",
+        });
+        gsap.from("#video-frame", {
+            clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+            borderRadius: "0% 0% 0% 0%",
+            ease: "power1.inOut",
+            scrollTrigger: {
+                trigger: "#video-frame",
+                start: "center center",
+                end: "bottom center",
+                scrub: true,
+            },
+        });
+    });
+
 
     const handleMiniVdClick = () => {
         setHasClicked(true);
@@ -35,6 +87,9 @@ const Hero = () => {
 
     return (
         <div className='relative h-dvh w-screen overflow-x-hidden'>
+            {isLoading && (
+                <Loader/>
+            )}
             <div id='video-frame' className='relative z-10 h-dvh w-screen overflow-hidden rounded-lg bg-blue-75'>
                 <div className="mask-clip-path absolute-center absolute z-50 size-64 cursor-pointer overflow-hidden rounded-lg">
                     <div onClick={handleMiniVdClick} className='origin-center scale-50 opacity-0 transition-all duration-500 ease-in hover:scale-100 hover:opacity-100'>
@@ -69,7 +124,30 @@ const Hero = () => {
                     className="absolute left-0 top-0 size-full object-cover object-center"
                     onLoadedData={handleVideoLoad}
                 />
+
+                <h1 className="special-font hero-heading absolute bottom-5 right-5 z-40 text-blue-100">
+                    Gr<b>a</b>Nova
+                </h1>
+
+                <div className="absolute left-0 top-0 z-40 size-full">
+                    <div className="mt-24 px-5 sm:px-10">
+                        <h1 className="special-font hero-heading text-blue-100">
+                            Redefi<b>n</b>e
+                        </h1>
+                        <p className="mb-5 max-w-64 font-rebort-regular text-blue-100">Start your Digital presence</p>
+
+                        <Button
+                            id="watch-trailer"
+                            title="Watch trailer"
+                            leftIcon={<TiLocationArrow />}
+                            containerClass="bg-yellow-300 flex-center gap-1"
+                        />
+                    </div>
+                </div>
             </div>
+            <h1 className="special-font hero-heading absolute bottom-5 right-5 text-black">
+                Gr<b>a</b>Nova
+            </h1>
         </div>
     )
 }
