@@ -3,9 +3,9 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/all";
 import { TiLocationArrow } from "react-icons/ti";
 import { useEffect, useRef, useState } from "react";
-import Loader from "./Loader";
+import Loader from "./Ui/Loader";
 
-import Button from "./Button";
+import Button from "./Ui/Button";
 import VideoPreview from "./VideoPreview";
 
 gsap.registerPlugin(ScrollTrigger);

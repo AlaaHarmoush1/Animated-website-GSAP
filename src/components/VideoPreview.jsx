@@ -7,7 +7,6 @@ export const VideoPreview = ({ children }) => {
   const sectionRef = useRef(null); // Reference for the container section
   const contentRef = useRef(null); // Reference for the inner content
 
-  // Handles mouse movement over the container
   const handleMouseMove = ({ clientX, clientY, currentTarget }) => {
     const rect = currentTarget.getBoundingClientRect(); // Get dimensions of the container
 
